@@ -148,7 +148,7 @@ export function ThreadPreview({
       </div>
 
       {/* Thread Cards */}
-      <div className="space-y-0" role="list" aria-label="Thread posts">
+      <div className={platform === "threads" ? "space-y-3" : "space-y-0"} role="list" aria-label="Thread posts">
         {threadData?.tweets.map((tweet, i) => (
           <div key={tweet.index} role="listitem">
             {platform === "x" ? (
