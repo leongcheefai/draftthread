@@ -207,6 +207,51 @@ function DrafthreadApp() {
         </button>
       </div>
 
+      {/* SEO Content - visually hidden but crawlable */}
+      <section className="sr-only" aria-hidden="true">
+        <h2>About Drafthread</h2>
+        <p>
+          Drafthread is a free AI-powered thread builder that helps content creators, marketers, and founders craft
+          engaging multi-post threads for X (formerly Twitter) and Threads by Meta. Turn your ideas, key points, and
+          call-to-action into optimized, platform-ready threads in seconds.
+        </p>
+        <h2>Why use Drafthread?</h2>
+        <p>
+          Writing viral threads is hard. You need the right hook, proper formatting, and platform-specific character
+          limits — 280 characters for X and 500 for Threads. Drafthread handles all of this automatically so you can
+          focus on your message, not the formatting.
+        </p>
+        <h2>Features</h2>
+        <ul>
+          <li>AI-powered thread generation from your topic and key points</li>
+          <li>Platform-specific formatting for X (Twitter) and Threads</li>
+          <li>Multiple thread types: product launches, lessons learned, milestones, and more</li>
+          <li>Adjustable tone: casual, professional, bold, or witty</li>
+          <li>Live preview with character count and inline editing</li>
+          <li>One-click copy to clipboard for easy posting</li>
+          <li>Numbered tweet support for better readability</li>
+          <li>Mobile-friendly responsive design</li>
+        </ul>
+        <h2>How it works</h2>
+        <ol>
+          <li>Choose your platform — X or Threads</li>
+          <li>Enter your topic, key points, and optional call-to-action</li>
+          <li>Select a thread type and tone</li>
+          <li>Click Generate and get a ready-to-post thread instantly</li>
+          <li>Edit inline, preview the result, and copy to your clipboard</li>
+        </ol>
+        <h2>Perfect for</h2>
+        <p>
+          Content creators building an audience, startup founders sharing their journey, marketers promoting products,
+          and anyone who wants to write better social media threads without spending hours on formatting.
+        </p>
+        <nav aria-label="Page sections">
+          <a href="#panel-write">Write your thread</a>
+          <a href="#panel-preview">Preview your thread</a>
+          <a href="https://www.praxor.dev/">Built by Praxor</a>
+        </nav>
+      </section>
+
       {/* Main Content */}
       <main className="flex-1 flex overflow-hidden">
         {/* Left Panel - Input Form */}
