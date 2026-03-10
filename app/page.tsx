@@ -98,10 +98,10 @@ function DrafthreadApp() {
   const [cooldown, setCooldown] = useState(false)
   const cooldownRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [formData, setFormData] = useState<FormData>({
-    topic: EXAMPLE_DATA.lessonLearned.topic,
-    keyPoints: EXAMPLE_DATA.lessonLearned.keyPoints,
-    cta: EXAMPLE_DATA.lessonLearned.cta,
-    handle: "cheefai",
+    topic: "",
+    keyPoints: "",
+    cta: "",
+    handle: "",
     threadType: "lesson",
     tone: "casual",
     numberTweets: true,
