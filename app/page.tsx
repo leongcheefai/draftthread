@@ -1,10 +1,48 @@
 "use client"
 
-import { useState, useRef, useCallback } from "react"
+import { useState, useRef, useCallback, Component, type ReactNode } from "react"
 import { Header } from "@/components/drafthread/header"
 import { InputForm } from "@/components/drafthread/input-form"
 import { ThreadPreview } from "@/components/drafthread/thread-preview"
 import type { ThreadData, FormData } from "@/lib/drafthread-types"
+import { Zap } from "lucide-react"
+
+// Error Boundary
+class ErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { hasError: false, error: null }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="h-screen flex flex-col items-center justify-center bg-zinc-950 px-6">
+          <Zap className="w-12 h-12 text-zinc-700 mb-4" />
+          <h1 className="text-lg font-medium text-zinc-300 mb-2">Something went wrong</h1>
+          <p className="text-sm text-zinc-500 mb-6 text-center max-w-md">
+            {this.state.error?.message || "An unexpected error occurred."}
+          </p>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+          >
+            Try again
+          </button>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
 
 const EXAMPLE_DATA = {
   featureLaunch: {
@@ -43,6 +81,14 @@ const EXAMPLE_DATA = {
 }
 
 export default function DrafthreadPage() {
+  return (
+    <ErrorBoundary>
+      <DrafthreadApp />
+    </ErrorBoundary>
+  )
+}
+
+function DrafthreadApp() {
   const [activePanel, setActivePanel] = useState<"write" | "preview">("write")
   const [platform, setPlatform] = useState<"x" | "threads">("x")
   const [threadData, setThreadData] = useState<ThreadData | null>(null)
@@ -131,10 +177,13 @@ export default function DrafthreadPage() {
       <Header />
 
       {/* Mobile Tabs */}
-      <div className="lg:hidden flex border-b border-zinc-800">
+      <div className="lg:hidden flex border-b border-zinc-800" role="tablist" aria-label="Editor panels">
         <button
+          role="tab"
+          aria-selected={activePanel === "write"}
+          aria-controls="panel-write"
           onClick={() => setActivePanel("write")}
-          className={`flex-1 py-3 text-sm font-medium transition-colors ${
+          className={`flex-1 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-inset ${
             activePanel === "write"
               ? "text-zinc-100 border-b-2 border-orange-500"
               : "text-zinc-500 hover:text-zinc-300"
@@ -143,8 +192,11 @@ export default function DrafthreadPage() {
           Write
         </button>
         <button
+          role="tab"
+          aria-selected={activePanel === "preview"}
+          aria-controls="panel-preview"
           onClick={() => setActivePanel("preview")}
-          className={`flex-1 py-3 text-sm font-medium transition-colors ${
+          className={`flex-1 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-inset ${
             activePanel === "preview"
               ? "text-zinc-100 border-b-2 border-orange-500"
               : "text-zinc-500 hover:text-zinc-300"
@@ -155,9 +207,12 @@ export default function DrafthreadPage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex overflow-hidden">
         {/* Left Panel - Input Form */}
         <div
+          id="panel-write"
+          role="tabpanel"
+          aria-label="Write"
           className={`${
             activePanel === "write" ? "flex" : "hidden"
           } lg:flex w-full lg:w-[480px] lg:shrink-0 flex-col overflow-y-auto border-r border-zinc-800 px-6 py-8 pb-24 lg:pb-8`}
@@ -178,6 +233,9 @@ export default function DrafthreadPage() {
 
         {/* Right Panel - Thread Preview */}
         <div
+          id="panel-preview"
+          role="tabpanel"
+          aria-label="Preview"
           className={`${
             activePanel === "preview" ? "flex" : "hidden"
           } lg:flex flex-1 flex-col overflow-y-auto bg-zinc-950 px-6 py-8 pb-24 lg:pb-8`}
@@ -194,18 +252,18 @@ export default function DrafthreadPage() {
             numberTweets={formData.numberTweets}
           />
         </div>
-      </div>
+      </main>
 
       {/* Mobile Sticky Generate Button */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-zinc-950 border-t border-zinc-800">
         <button
           onClick={handleGenerate}
           disabled={isGenerating || cooldown || !formData.topic || !formData.keyPoints}
-          className="w-full h-12 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
+          className="w-full h-12 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
         >
           {isGenerating ? (
             <>
-              <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                 <path
                   className="opacity-75"
@@ -217,7 +275,7 @@ export default function DrafthreadPage() {
             </>
           ) : (
             <>
-              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
               </svg>
               Generate Thread

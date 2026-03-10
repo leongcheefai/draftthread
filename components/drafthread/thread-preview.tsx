@@ -16,6 +16,8 @@ import {
 } from "lucide-react"
 import type { ThreadData, Platform } from "@/lib/drafthread-types"
 
+const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+
 interface ThreadPreviewProps {
   threadData: ThreadData | null
   platform: Platform
@@ -68,22 +70,22 @@ export function ThreadPreview({
   if (!threadData && !isGenerating) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center py-20 text-center">
-        <Zap className="w-16 h-16 text-zinc-700 mb-4" />
-        <h3 className="text-lg font-medium text-zinc-400 mb-2">Your thread will appear here</h3>
+        <Zap className="w-16 h-16 text-zinc-700 mb-4" aria-hidden="true" />
+        <h2 className="text-lg font-medium text-zinc-400 mb-2">Your thread will appear here</h2>
         <p className="text-sm text-zinc-600 mb-8">Fill in the form and hit Generate</p>
         <div className="flex gap-3">
           <button
             onClick={() => onLoadExample("featureLaunch")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-sm hover:border-zinc-500 transition-colors cursor-pointer"
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-sm hover:border-zinc-500 transition-colors ${focusRing}`}
           >
-            <Rocket className="w-4 h-4" />
+            <Rocket className="w-4 h-4" aria-hidden="true" />
             Feature Launch example
           </button>
           <button
             onClick={() => onLoadExample("lessonLearned")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-sm hover:border-zinc-500 transition-colors cursor-pointer"
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 border border-zinc-700 text-zinc-300 text-sm hover:border-zinc-500 transition-colors ${focusRing}`}
           >
-            <Lightbulb className="w-4 h-4" />
+            <Lightbulb className="w-4 h-4" aria-hidden="true" />
             Lesson Learned example
           </button>
         </div>
@@ -94,11 +96,11 @@ export function ThreadPreview({
   // Generating State
   if (isGenerating) {
     return (
-      <div className="flex-1">
+      <div className="flex-1" aria-busy="true" aria-label="Generating thread">
         <div className="mb-6">
           <p className="text-sm text-zinc-300 mb-3">Writing your thread...</p>
           <div className="flex items-center gap-3">
-            <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden">
+            <div className="flex-1 h-2 bg-zinc-800 rounded-full overflow-hidden" role="progressbar" aria-label="Generating">
               <div className="h-full bg-orange-500 rounded-full animate-pulse" style={{ width: "60%" }} />
             </div>
             <span className="text-xs text-zinc-500">Crafting hook</span>
@@ -106,7 +108,7 @@ export function ThreadPreview({
         </div>
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 animate-pulse">
+            <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 animate-pulse" aria-hidden="true">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-full bg-zinc-800" />
                 <div className="flex-1 space-y-2">
@@ -132,24 +134,24 @@ export function ThreadPreview({
       {/* Platform Preview Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Preview</span>
-          <span className="text-xs text-zinc-600">·</span>
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500">Preview</h2>
+          <span className="text-xs text-zinc-600" aria-hidden="true">·</span>
           <span className="text-xs text-zinc-400">
             {platform === "x" ? "X (Twitter)" : "Threads"}
           </span>
         </div>
         <button
           onClick={() => setPlatform(platform === "x" ? "threads" : "x")}
-          className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer"
+          className={`text-xs text-zinc-500 hover:text-zinc-300 transition-colors ${focusRing} rounded px-2 py-1`}
         >
           Switch to {platform === "x" ? "Threads" : "X"}
         </button>
       </div>
 
       {/* Thread Cards */}
-      <div className="space-y-0">
+      <div className="space-y-0" role="list" aria-label="Thread posts">
         {threadData?.tweets.map((tweet, i) => (
-          <div key={tweet.index}>
+          <div key={tweet.index} role="listitem">
             {platform === "x" ? (
               <XTweetCard
                 tweet={tweet}
@@ -193,32 +195,32 @@ export function ThreadPreview({
           <div className="flex gap-3 mb-4">
             <button
               onClick={() => copyFullThread("full")}
-              className="flex-1 h-10 flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+              className={`flex-1 h-10 flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-sm font-medium rounded-lg transition-colors ${focusRing}`}
             >
               {copiedAll === "full" ? (
                 <>
-                  <Check className="w-4 h-4 text-green-500" />
+                  <Check className="w-4 h-4 text-green-500" aria-hidden="true" />
                   Copied!
                 </>
               ) : (
                 <>
-                  <Copy className="w-4 h-4" />
+                  <Copy className="w-4 h-4" aria-hidden="true" />
                   Copy Full Thread
                 </>
               )}
             </button>
             <button
               onClick={() => copyFullThread("typefully")}
-              className="flex-1 h-10 flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-sm font-medium rounded-lg transition-colors cursor-pointer"
+              className={`flex-1 h-10 flex items-center justify-center gap-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-sm font-medium rounded-lg transition-colors ${focusRing}`}
             >
               {copiedAll === "typefully" ? (
                 <>
-                  <Check className="w-4 h-4 text-green-500" />
+                  <Check className="w-4 h-4 text-green-500" aria-hidden="true" />
                   Copied!
                 </>
               ) : (
                 <>
-                  <Zap className="w-4 h-4" />
+                  <Zap className="w-4 h-4" aria-hidden="true" />
                   Copy for Typefully
                 </>
               )}
@@ -226,9 +228,9 @@ export function ThreadPreview({
           </div>
           <button
             onClick={onRegenerate}
-            className="flex items-center gap-1.5 text-zinc-500 hover:text-zinc-300 text-xs transition-colors cursor-pointer"
+            className={`flex items-center gap-1.5 text-zinc-500 hover:text-zinc-300 text-xs transition-colors rounded px-2 py-1 -ml-2 ${focusRing}`}
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-3.5 h-3.5" aria-hidden="true" />
             Regenerate
           </button>
         </div>
@@ -239,7 +241,7 @@ export function ThreadPreview({
 
 function ThreadConnector() {
   return (
-    <div className="flex justify-center py-1">
+    <div className="flex justify-center py-1" aria-hidden="true">
       <div className="flex flex-col items-center">
         <div className="w-px h-3 bg-zinc-700" />
         <div className="w-1.5 h-1.5 rounded-full bg-zinc-700" />
@@ -290,7 +292,8 @@ function XTweetCard({
         : ""
 
   return (
-    <div
+    <article
+      aria-label={`Tweet ${tweet.index} of ${totalTweets}${tweet.type !== "insight" ? ` (${tweet.type})` : ""}`}
       className={`relative bg-zinc-900 border border-zinc-800 rounded-2xl p-4 ${borderClass} ${
         isOverLimit ? "ring-1 ring-red-500 bg-red-500/5" : ""
       }`}
@@ -298,7 +301,7 @@ function XTweetCard({
       {/* Badge */}
       {tweet.type !== "insight" && (
         <span
-          className={`absolute top-3 right-12 text-xs px-2 py-0.5 rounded-full ${
+          className={`absolute top-3 right-14 text-xs px-2 py-0.5 rounded-full ${
             tweet.type === "hook"
               ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
               : "bg-green-500/20 text-green-400 border border-green-500/30"
@@ -311,14 +314,16 @@ function XTweetCard({
       {/* Edit Button */}
       <button
         onClick={onEdit}
-        className="absolute top-3 right-3 cursor-pointer"
+        aria-label={isEditing ? "Stop editing tweet" : "Edit tweet"}
+        aria-pressed={isEditing}
+        className={`absolute top-2 right-2 p-1.5 rounded-md ${focusRing}`}
       >
         <Pencil className="w-3.5 h-3.5 text-zinc-600 hover:text-zinc-300 transition-colors" />
       </button>
 
       {/* Header */}
       <div className="flex items-start gap-3">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0" aria-hidden="true">
           {handle.charAt(0).toUpperCase()}
         </div>
         <div className="flex-1 min-w-0">
@@ -338,9 +343,10 @@ function XTweetCard({
           className="w-full mt-3 bg-zinc-800 border border-zinc-700 rounded-lg p-2 text-sm text-zinc-100 leading-relaxed resize-none focus:outline-none focus:border-orange-500"
           rows={5}
           autoFocus
+          aria-label={`Edit tweet ${tweet.index} content`}
         />
       ) : (
-        <p className="text-sm text-zinc-100 leading-relaxed mt-3 whitespace-pre-wrap">
+        <p className="text-sm text-zinc-100 leading-relaxed mt-3 whitespace-pre-wrap break-words">
           {tweet.content}
           {numberTweets && (
             <span className="text-zinc-500"> {tweet.index}/{totalTweets}</span>
@@ -349,13 +355,14 @@ function XTweetCard({
       )}
 
       {/* Action Row */}
-      <div className="flex items-center gap-5 mt-3 pt-3 border-t border-zinc-800">
+      <div className="flex items-center gap-5 mt-3 pt-3 border-t border-zinc-800" aria-hidden="true">
         <Heart className="w-4 h-4 text-zinc-600" />
         <Repeat2 className="w-4 h-4 text-zinc-600" />
         <MessageCircle className="w-4 h-4 text-zinc-600" />
         <Share className="w-4 h-4 text-zinc-600" />
         <div className="ml-auto flex items-center gap-2">
           <span
+            aria-hidden="true"
             className={`font-mono text-xs ${
               isOverLimit
                 ? "text-red-500 font-semibold"
@@ -367,7 +374,11 @@ function XTweetCard({
             {tweet.charCount}/{charLimit}
             {isOverLimit && " ⚠️"}
           </span>
-          <button onClick={onCopy} className="cursor-pointer">
+          <button
+            onClick={onCopy}
+            aria-label={isCopied ? "Copied" : "Copy tweet"}
+            className={`p-1.5 -m-0.5 rounded-md ${focusRing}`}
+          >
             {isCopied ? (
               <Check className="w-3.5 h-3.5 text-green-500" />
             ) : (
@@ -376,7 +387,11 @@ function XTweetCard({
           </button>
         </div>
       </div>
-    </div>
+      {/* Screen-reader char count */}
+      <span className="sr-only">
+        {tweet.charCount} of {charLimit} characters{isOverLimit ? ", over limit" : isWarning ? ", near limit" : ""}
+      </span>
+    </article>
   )
 }
 
@@ -404,7 +419,8 @@ function ThreadsPostCard({
         : ""
 
   return (
-    <div
+    <article
+      aria-label={`Post ${tweet.index} of ${totalTweets}${tweet.type !== "insight" ? ` (${tweet.type})` : ""}`}
       className={`relative bg-zinc-900 border border-zinc-700 rounded-2xl p-4 ${borderClass} ${
         isOverLimit ? "ring-1 ring-red-500 bg-red-500/5" : ""
       }`}
@@ -412,7 +428,7 @@ function ThreadsPostCard({
       {/* Badge */}
       {tweet.type !== "insight" && (
         <span
-          className={`absolute top-3 right-12 text-xs px-2 py-0.5 rounded-full ${
+          className={`absolute top-3 right-14 text-xs px-2 py-0.5 rounded-full ${
             tweet.type === "hook"
               ? "bg-orange-500/20 text-orange-400 border border-orange-500/30"
               : "bg-green-500/20 text-green-400 border border-green-500/30"
@@ -425,7 +441,9 @@ function ThreadsPostCard({
       {/* Edit Button */}
       <button
         onClick={onEdit}
-        className="absolute top-3 right-3 cursor-pointer"
+        aria-label={isEditing ? "Stop editing post" : "Edit post"}
+        aria-pressed={isEditing}
+        className={`absolute top-2 right-2 p-1.5 rounded-md ${focusRing}`}
       >
         <Pencil className="w-3.5 h-3.5 text-zinc-600 hover:text-zinc-300 transition-colors" />
       </button>
@@ -433,10 +451,10 @@ function ThreadsPostCard({
       {/* Header with Thread Line */}
       <div className="flex gap-3">
         <div className="flex flex-col items-center">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold shrink-0" aria-hidden="true">
             {handle.charAt(0).toUpperCase()}
           </div>
-          {showThreadLine && <div className="w-px flex-1 bg-zinc-700 mt-2" />}
+          {showThreadLine && <div className="w-px flex-1 bg-zinc-700 mt-2" aria-hidden="true" />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
@@ -452,9 +470,10 @@ function ThreadsPostCard({
               className="w-full mt-3 bg-zinc-800 border border-zinc-700 rounded-lg p-2 text-[15px] text-zinc-100 leading-relaxed resize-none focus:outline-none focus:border-purple-500"
               rows={5}
               autoFocus
+              aria-label={`Edit post ${tweet.index} content`}
             />
           ) : (
-            <p className="text-[15px] text-zinc-100 leading-relaxed mt-3 whitespace-pre-wrap">
+            <p className="text-[15px] text-zinc-100 leading-relaxed mt-3 whitespace-pre-wrap break-words">
               {tweet.content}
               {numberTweets && (
                 <span className="text-zinc-500"> {tweet.index}/{totalTweets}</span>
@@ -463,7 +482,7 @@ function ThreadsPostCard({
           )}
 
           {/* Action Row */}
-          <div className="flex items-center gap-5 mt-3 pt-3 border-t border-zinc-800">
+          <div className="flex items-center gap-5 mt-3 pt-3 border-t border-zinc-800" aria-hidden="true">
             <div className="flex items-center gap-1 text-zinc-600">
               <Heart className="w-4 h-4" />
               <span className="text-xs">0</span>
@@ -482,6 +501,7 @@ function ThreadsPostCard({
             </div>
             <div className="ml-auto flex items-center gap-2">
               <span
+                aria-hidden="true"
                 className={`font-mono text-xs ${
                   isOverLimit
                     ? "text-red-500 font-semibold"
@@ -493,7 +513,11 @@ function ThreadsPostCard({
                 {tweet.charCount}/{charLimit}
                 {isOverLimit && " ⚠️"}
               </span>
-              <button onClick={onCopy} className="cursor-pointer">
+              <button
+                onClick={onCopy}
+                aria-label={isCopied ? "Copied" : "Copy post"}
+                className={`p-1.5 -m-0.5 rounded-md ${focusRing}`}
+              >
                 {isCopied ? (
                   <Check className="w-3.5 h-3.5 text-green-500" />
                 ) : (
@@ -502,8 +526,12 @@ function ThreadsPostCard({
               </button>
             </div>
           </div>
+          {/* Screen-reader char count */}
+          <span className="sr-only">
+            {tweet.charCount} of {charLimit} characters{isOverLimit ? ", over limit" : isWarning ? ", near limit" : ""}
+          </span>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
