@@ -118,7 +118,7 @@ Return a JSON object with this exact shape:
 Calculate charCount accurately for each tweet. Do not exceed ${rules.maxChars} characters per tweet.`
 
     const response = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 1500,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: userPrompt }],
