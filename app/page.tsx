@@ -24,15 +24,15 @@ class ErrorBoundary extends Component<
   render() {
     if (this.state.hasError) {
       return (
-        <div className="h-screen flex flex-col items-center justify-center bg-zinc-950 px-6">
-          <Zap className="w-12 h-12 text-zinc-700 mb-4" />
-          <h1 className="text-lg font-medium text-zinc-300 mb-2">Something went wrong</h1>
-          <p className="text-sm text-zinc-500 mb-6 text-center max-w-md">
+        <div className="h-screen flex flex-col items-center justify-center bg-background px-6">
+          <Zap className="w-12 h-12 text-accent mb-4" />
+          <h1 className="text-lg font-medium text-secondary-foreground mb-2">Something went wrong</h1>
+          <p className="text-sm text-muted-foreground mb-6 text-center max-w-md">
             {this.state.error?.message || "An unexpected error occurred."}
           </p>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
-            className="px-4 py-2 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+            className="px-4 py-2 bg-secondary hover:bg-accent border border-accent text-foreground text-sm font-medium rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             Try again
           </button>
@@ -173,20 +173,20 @@ function DrafthreadApp() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-zinc-950">
+    <div className="h-screen flex flex-col bg-background">
       <Header />
 
       {/* Mobile Tabs */}
-      <div className="lg:hidden flex border-b border-zinc-800" role="tablist" aria-label="Editor panels">
+      <div className="lg:hidden flex border-b border-border" role="tablist" aria-label="Editor panels">
         <button
           role="tab"
           aria-selected={activePanel === "write"}
           aria-controls="panel-write"
           onClick={() => setActivePanel("write")}
-          className={`flex-1 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-inset ${
+          className={`flex-1 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${
             activePanel === "write"
-              ? "text-zinc-100 border-b-2 border-orange-500"
-              : "text-zinc-500 hover:text-zinc-300"
+              ? "text-foreground border-b-2 border-primary"
+              : "text-muted-foreground hover:text-secondary-foreground"
           }`}
         >
           Write
@@ -196,10 +196,10 @@ function DrafthreadApp() {
           aria-selected={activePanel === "preview"}
           aria-controls="panel-preview"
           onClick={() => setActivePanel("preview")}
-          className={`flex-1 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-inset ${
+          className={`flex-1 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset ${
             activePanel === "preview"
-              ? "text-zinc-100 border-b-2 border-orange-500"
-              : "text-zinc-500 hover:text-zinc-300"
+              ? "text-foreground border-b-2 border-primary"
+              : "text-muted-foreground hover:text-secondary-foreground"
           }`}
         >
           Preview
@@ -215,7 +215,7 @@ function DrafthreadApp() {
           aria-label="Write"
           className={`${
             activePanel === "write" ? "flex" : "hidden"
-          } lg:flex w-full lg:w-[480px] lg:shrink-0 flex-col overflow-y-auto border-r border-zinc-800 px-6 py-8 pb-24 lg:pb-8`}
+          } lg:flex w-full lg:w-[480px] lg:shrink-0 flex-col overflow-y-auto border-r border-border px-6 py-8 pb-24 lg:pb-8`}
         >
           <InputForm
             formData={formData}
@@ -238,7 +238,7 @@ function DrafthreadApp() {
           aria-label="Preview"
           className={`${
             activePanel === "preview" ? "flex" : "hidden"
-          } lg:flex flex-1 flex-col overflow-y-auto bg-zinc-950 px-6 py-8 pb-24 lg:pb-8`}
+          } lg:flex flex-1 flex-col overflow-y-auto bg-background px-6 py-8 pb-24 lg:pb-8`}
         >
           <ThreadPreview
             threadData={threadData}
@@ -255,11 +255,11 @@ function DrafthreadApp() {
       </main>
 
       {/* Mobile Sticky Generate Button */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-zinc-950 border-t border-zinc-800">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-background border-t border-border">
         <button
           onClick={handleGenerate}
           disabled={isGenerating || cooldown || !formData.topic || !formData.keyPoints}
-          className="w-full h-12 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+          className="w-full h-12 bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           {isGenerating ? (
             <>

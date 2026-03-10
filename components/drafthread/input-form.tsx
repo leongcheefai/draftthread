@@ -37,7 +37,7 @@ const THREAD_TYPES: { type: ThreadType; label: string; icon: React.ReactNode }[]
 
 const TONES: Tone[] = ["professional", "casual", "bold", "educational"]
 
-const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
+const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 
 export function InputForm({
   formData,
@@ -59,7 +59,7 @@ export function InputForm({
     <div className="space-y-6">
       {/* Platform Toggle */}
       <fieldset>
-        <legend className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">
+        <legend className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
           Platform
         </legend>
         <div className="flex gap-3" role="radiogroup" aria-label="Platform">
@@ -69,12 +69,12 @@ export function InputForm({
             onClick={() => setPlatform("x")}
             className={`flex-1 h-16 flex flex-col items-center justify-center gap-1 rounded-xl border-2 transition-all ${focusRing} ${
               platform === "x"
-                ? "border-white bg-zinc-700"
-                : "border-zinc-700 bg-zinc-800 hover:border-zinc-500"
+                ? "border-foreground bg-accent"
+                : "border-accent bg-secondary hover:border-muted-foreground"
             }`}
           >
-            <span className="text-xl font-black text-white" aria-hidden="true">&#x1D54F;</span>
-            <span className="text-xs text-zinc-400">280 chars · 5-8 tweets</span>
+            <span className="text-xl font-black text-foreground" aria-hidden="true">&#x1D54F;</span>
+            <span className="text-xs text-accent-foreground">280 chars · 5-8 tweets</span>
           </button>
           <button
             role="radio"
@@ -82,19 +82,19 @@ export function InputForm({
             onClick={() => setPlatform("threads")}
             className={`flex-1 h-16 flex flex-col items-center justify-center gap-1 rounded-xl border-2 transition-all ${focusRing} ${
               platform === "threads"
-                ? "border-purple-500 bg-zinc-700"
-                : "border-zinc-700 bg-zinc-800 hover:border-zinc-500"
+                ? "border-purple-500 bg-accent"
+                : "border-accent bg-secondary hover:border-muted-foreground"
             }`}
           >
             <span className="text-xl font-black text-purple-400" aria-hidden="true">@</span>
-            <span className="text-xs text-zinc-400">500 chars · 4-6 posts</span>
+            <span className="text-xs text-accent-foreground">500 chars · 4-6 posts</span>
           </button>
         </div>
       </fieldset>
 
       {/* Thread Type */}
       <fieldset>
-        <legend className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">
+        <legend className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
           Thread Type
         </legend>
         <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Thread type">
@@ -106,14 +106,14 @@ export function InputForm({
               onClick={() => updateField("threadType", type)}
               className={`p-3 flex flex-col items-center gap-1 rounded-xl border transition-all ${focusRing} ${
                 formData.threadType === type
-                  ? "border-orange-500 bg-orange-500/10"
-                  : "border-zinc-700 bg-zinc-800 hover:border-zinc-500"
+                  ? "border-primary bg-primary/10"
+                  : "border-accent bg-secondary hover:border-muted-foreground"
               }`}
             >
-              <span className={formData.threadType === type ? "text-orange-400" : "text-zinc-400"} aria-hidden="true">
+              <span className={formData.threadType === type ? "text-primary" : "text-accent-foreground"} aria-hidden="true">
                 {icon}
               </span>
-              <span className="text-xs font-medium text-zinc-300">{label}</span>
+              <span className="text-xs font-medium text-secondary-foreground">{label}</span>
             </button>
           ))}
         </div>
@@ -121,7 +121,7 @@ export function InputForm({
 
       {/* Tone */}
       <fieldset>
-        <legend className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3">
+        <legend className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3">
           Tone
         </legend>
         <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Tone">
@@ -133,8 +133,8 @@ export function InputForm({
               onClick={() => updateField("tone", tone)}
               className={`text-xs font-medium px-3 py-1.5 rounded-full border transition-colors capitalize ${focusRing} ${
                 formData.tone === tone
-                  ? "border-orange-500 text-orange-400 bg-orange-500/10"
-                  : "border-zinc-700 text-zinc-400 bg-transparent hover:border-zinc-500"
+                  ? "border-primary text-primary bg-primary/10"
+                  : "border-accent text-accent-foreground bg-transparent hover:border-muted-foreground"
               }`}
             >
               {tone}
@@ -145,7 +145,7 @@ export function InputForm({
 
       {/* Content Inputs */}
       <div>
-        <label htmlFor="topic" className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3 block">
+        <label htmlFor="topic" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 block">
           Topic
         </label>
         <textarea
@@ -153,12 +153,12 @@ export function InputForm({
           value={formData.topic}
           onChange={(e) => updateField("topic", e.target.value)}
           placeholder="What is this thread about?"
-          className="w-full h-20 resize-none bg-zinc-800 border border-zinc-700 focus:border-orange-500 focus:outline-none rounded-lg p-3 text-sm text-zinc-100 placeholder:text-zinc-600 transition-colors"
+          className="w-full h-20 resize-none bg-secondary border border-accent focus:border-primary focus:outline-none rounded-lg p-3 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors"
         />
       </div>
 
       <div>
-        <label htmlFor="key-points" className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3 block">
+        <label htmlFor="key-points" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 block">
           Key Points
         </label>
         <textarea
@@ -167,15 +167,15 @@ export function InputForm({
           onChange={(e) => updateField("keyPoints", e.target.value)}
           placeholder="Paste notes, bullet points, anything..."
           aria-describedby="key-points-hint"
-          className="w-full h-36 resize-none bg-zinc-800 border border-zinc-700 focus:border-orange-500 focus:outline-none rounded-lg p-3 text-sm text-zinc-100 placeholder:text-zinc-600 transition-colors"
+          className="w-full h-36 resize-none bg-secondary border border-accent focus:border-primary focus:outline-none rounded-lg p-3 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors"
         />
-        <p id="key-points-hint" className="text-xs text-zinc-600 mt-1.5">
+        <p id="key-points-hint" className="text-xs text-muted-foreground/70 mt-1.5">
           Raw notes, bullet points, or a paragraph — AI will structure it
         </p>
       </div>
 
       <div>
-        <label htmlFor="cta" className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-3 block">
+        <label htmlFor="cta" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-3 block">
           Call to Action
         </label>
         <textarea
@@ -184,26 +184,26 @@ export function InputForm({
           onChange={(e) => updateField("cta", e.target.value)}
           placeholder="What should readers do after reading?"
           aria-describedby="cta-hint"
-          className="w-full h-16 resize-none bg-zinc-800 border border-zinc-700 focus:border-orange-500 focus:outline-none rounded-lg p-3 text-sm text-zinc-100 placeholder:text-zinc-600 transition-colors"
+          className="w-full h-16 resize-none bg-secondary border border-accent focus:border-primary focus:outline-none rounded-lg p-3 text-sm text-foreground placeholder:text-muted-foreground/70 transition-colors"
         />
-        <p id="cta-hint" className="text-xs text-zinc-600 mt-1.5">e.g., Follow for more, DM me, Check the link in bio</p>
+        <p id="cta-hint" className="text-xs text-muted-foreground/70 mt-1.5">e.g., Follow for more, DM me, Check the link in bio</p>
       </div>
 
       {/* Settings Row */}
       <div className="flex items-center gap-4">
         <div className="flex-1">
-          <label htmlFor="handle" className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-2 block">
+          <label htmlFor="handle" className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-2 block">
             @handle
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-zinc-500" aria-hidden="true">@</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground" aria-hidden="true">@</span>
             <input
               id="handle"
               type="text"
               value={formData.handle}
               onChange={(e) => updateField("handle", e.target.value)}
               placeholder="yourhandle"
-              className="w-full h-9 pl-7 pr-3 text-sm bg-zinc-800 border border-zinc-700 focus:border-orange-500 focus:outline-none rounded-lg text-zinc-100 placeholder:text-zinc-600 transition-colors"
+              className="w-full h-9 pl-7 pr-3 text-sm bg-secondary border border-accent focus:border-primary focus:outline-none rounded-lg text-foreground placeholder:text-muted-foreground/70 transition-colors"
             />
           </div>
         </div>
@@ -214,7 +214,7 @@ export function InputForm({
             onCheckedChange={(checked) => updateField("numberTweets", checked)}
             aria-label="Number tweets"
           />
-          <label htmlFor="number-tweets" className="text-xs text-zinc-400">Number tweets (1/7)</label>
+          <label htmlFor="number-tweets" className="text-xs text-accent-foreground">Number tweets (1/7)</label>
         </div>
       </div>
 
@@ -222,7 +222,7 @@ export function InputForm({
       {error && (
         <div
           role="alert"
-          className="flex items-start gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm"
+          className="flex items-start gap-3 p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-destructive-foreground text-sm"
         >
           <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" aria-hidden="true" />
           <p className="flex-1">{error}</p>
@@ -231,7 +231,7 @@ export function InputForm({
             aria-label="Dismiss error"
             className={`shrink-0 p-1 -m-1 ${focusRing}`}
           >
-            <X className="w-4 h-4 hover:text-red-300 transition-colors" />
+            <X className="w-4 h-4 hover:text-destructive transition-colors" />
           </button>
         </div>
       )}
@@ -241,7 +241,7 @@ export function InputForm({
         <button
           onClick={onGenerate}
           disabled={isGenerating || isDisabled || !formData.topic || !formData.keyPoints}
-          className={`w-full h-12 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 ${focusRing}`}
+          className={`w-full h-12 bg-primary hover:bg-primary-hover disabled:opacity-50 disabled:cursor-not-allowed text-primary-foreground font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 ${focusRing}`}
         >
           {isGenerating ? (
             <>
@@ -259,24 +259,24 @@ export function InputForm({
 
       {/* Quick Examples */}
       <div className="flex flex-wrap items-center gap-2 text-xs">
-        <span className="text-zinc-600">Try an example:</span>
+        <span className="text-muted-foreground/70">Try an example:</span>
         <button
           onClick={() => onLoadExample("featureLaunch")}
-          className={`text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1 ${focusRing} rounded px-1 py-0.5`}
+          className={`text-muted-foreground hover:text-secondary-foreground transition-colors flex items-center gap-1 ${focusRing} rounded px-1 py-0.5`}
         >
           <Rocket className="w-3 h-3" aria-hidden="true" />
           Feature Launch
         </button>
         <button
           onClick={() => onLoadExample("lessonLearned")}
-          className={`text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1 ${focusRing} rounded px-1 py-0.5`}
+          className={`text-muted-foreground hover:text-secondary-foreground transition-colors flex items-center gap-1 ${focusRing} rounded px-1 py-0.5`}
         >
           <Lightbulb className="w-3 h-3" aria-hidden="true" />
           Lesson Learned
         </button>
         <button
           onClick={() => onLoadExample("milestone")}
-          className={`text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1 ${focusRing} rounded px-1 py-0.5`}
+          className={`text-muted-foreground hover:text-secondary-foreground transition-colors flex items-center gap-1 ${focusRing} rounded px-1 py-0.5`}
         >
           <Target className="w-3 h-3" aria-hidden="true" />
           Milestone

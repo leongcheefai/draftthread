@@ -36,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="font-sans antialiased bg-zinc-950">
+      <body className="font-sans antialiased bg-background">
         {children}
         <Analytics />
       </body>
