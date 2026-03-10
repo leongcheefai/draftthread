@@ -10,7 +10,14 @@ export function Header() {
           Turn ideas into viral threads
         </span>
       </div>
-      <span className="text-xs text-muted-foreground/70">X + Threads</span>
+      <a
+        href="https://www.praxor.dev/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-xs text-muted-foreground/70 hover:text-foreground transition-colors"
+      >
+        Built by Praxor
+      </a>
     </header>
   )
 }
