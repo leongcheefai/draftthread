@@ -13,6 +13,7 @@ import {
 } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import type { FormData, ThreadType, Tone } from "@/lib/drafthread-types"
+import { focusRing } from "@/lib/styles"
 
 interface InputFormProps {
   formData: FormData
@@ -36,8 +37,6 @@ const THREAD_TYPES: { type: ThreadType; label: string; icon: React.ReactNode }[]
 ]
 
 const TONES: Tone[] = ["professional", "casual", "bold", "educational"]
-
-const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
 
 export function InputForm({
   formData,

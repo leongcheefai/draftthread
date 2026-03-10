@@ -15,8 +15,7 @@ import {
   Lightbulb,
 } from "lucide-react"
 import type { ThreadData, Platform } from "@/lib/drafthread-types"
-
-const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+import { focusRing } from "@/lib/styles"
 
 interface ThreadPreviewProps {
   threadData: ThreadData | null
@@ -316,9 +315,9 @@ function XTweetCard({
         onClick={onEdit}
         aria-label={isEditing ? "Stop editing tweet" : "Edit tweet"}
         aria-pressed={isEditing}
-        className={`absolute top-2 right-2 p-1.5 rounded-md ${focusRing}`}
+        className={`absolute top-2 right-2 p-1.5 rounded-md transition-colors ${focusRing} ${isEditing ? "bg-primary/10 text-primary" : "hover:bg-secondary"}`}
       >
-        <Pencil className="w-3.5 h-3.5 text-muted-foreground/70 hover:text-secondary-foreground transition-colors" />
+        <Pencil className={`w-3.5 h-3.5 transition-colors ${isEditing ? "text-primary" : "text-muted-foreground/70 hover:text-secondary-foreground"}`} />
       </button>
 
       {/* Header */}
@@ -377,7 +376,7 @@ function XTweetCard({
           <button
             onClick={onCopy}
             aria-label={isCopied ? "Copied" : "Copy tweet"}
-            className={`p-1.5 -m-0.5 rounded-md ${focusRing}`}
+            className={`p-1.5 -m-0.5 rounded-md transition-colors hover:bg-secondary ${focusRing}`}
           >
             {isCopied ? (
               <Check className="w-3.5 h-3.5 text-green-500" />
@@ -443,9 +442,9 @@ function ThreadsPostCard({
         onClick={onEdit}
         aria-label={isEditing ? "Stop editing post" : "Edit post"}
         aria-pressed={isEditing}
-        className={`absolute top-2 right-2 p-1.5 rounded-md ${focusRing}`}
+        className={`absolute top-2 right-2 p-1.5 rounded-md transition-colors ${focusRing} ${isEditing ? "bg-primary/10 text-primary" : "hover:bg-secondary"}`}
       >
-        <Pencil className="w-3.5 h-3.5 text-muted-foreground/70 hover:text-secondary-foreground transition-colors" />
+        <Pencil className={`w-3.5 h-3.5 transition-colors ${isEditing ? "text-primary" : "text-muted-foreground/70 hover:text-secondary-foreground"}`} />
       </button>
 
       {/* Header with Thread Line */}
@@ -516,7 +515,7 @@ function ThreadsPostCard({
               <button
                 onClick={onCopy}
                 aria-label={isCopied ? "Copied" : "Copy post"}
-                className={`p-1.5 -m-0.5 rounded-md ${focusRing}`}
+                className={`p-1.5 -m-0.5 rounded-md transition-colors hover:bg-secondary ${focusRing}`}
               >
                 {isCopied ? (
                   <Check className="w-3.5 h-3.5 text-green-500" />
