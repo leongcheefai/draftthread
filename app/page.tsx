@@ -1,66 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useCallback } from "react"
 import { Header } from "@/components/drafthread/header"
 import { InputForm } from "@/components/drafthread/input-form"
 import { ThreadPreview } from "@/components/drafthread/thread-preview"
 import type { ThreadData, FormData } from "@/lib/drafthread-types"
-
-const MOCK_THREAD: ThreadData = {
-  platform: "x",
-  totalTweets: 7,
-  tweets: [
-    {
-      index: 1,
-      type: "hook",
-      content:
-        "8 months ago I had zero revenue and was about to quit.\n\nToday I crossed RM 1,000 MRR with my first SaaS.\n\nHere's the honest breakdown nobody talks about: 🧵",
-      charCount: 164,
-    },
-    {
-      index: 2,
-      type: "insight",
-      content:
-        "Month 1-3: Absolute silence.\n\n2 users. Both were friends who felt bad for me.\n\nI almost shut it down after month 2.\n\nThe mistake? I was building features instead of talking to people.",
-      charCount: 181,
-    },
-    {
-      index: 3,
-      type: "insight",
-      content:
-        "The turning point wasn't a feature.\n\nIt was switching from RM 19/month to a RM 149 lifetime deal.\n\n3 sales in the first week. More than the previous 3 months combined.\n\nPricing is a distribution strategy.",
-      charCount: 207,
-    },
-    {
-      index: 4,
-      type: "insight",
-      content:
-        "What actually drove growth:\n\n→ Answering questions in 2 niche subreddits daily\n→ Commenting on Indie Hackers posts\n→ One honest \"I built this\" tweet per week\n\nNo paid ads. No cold email. No growth hacks.",
-      charCount: 208,
-    },
-    {
-      index: 5,
-      type: "insight",
-      content:
-        "What completely failed:\n\n→ Product Hunt launch (3 upvotes, 0 sales)\n→ Cold email campaign (200 sent, 1 reply)\n→ Building in public on LinkedIn (crickets)\n\nAudience matters more than the launch platform.",
-      charCount: 208,
-    },
-    {
-      index: 6,
-      type: "insight",
-      content:
-        "Current state:\n\n• 23 paying customers\n• RM 1,047 MRR\n• 4.1% monthly churn\n• ~RM 450 in server + tools costs\n\nNot life-changing yet. But it's real. And it's mine.",
-      charCount: 172,
-    },
-    {
-      index: 7,
-      type: "cta",
-      content:
-        "If you're building your first SaaS in Malaysia or Southeast Asia, I share weekly updates on the road to RM 10k MRR.\n\nFollow for the honest version — no vanity metrics, no hype.",
-      charCount: 176,
-    },
-  ],
-}
 
 const EXAMPLE_DATA = {
   featureLaunch: {
@@ -101,8 +45,11 @@ const EXAMPLE_DATA = {
 export default function DrafthreadPage() {
   const [activePanel, setActivePanel] = useState<"write" | "preview">("write")
   const [platform, setPlatform] = useState<"x" | "threads">("x")
-  const [threadData, setThreadData] = useState<ThreadData | null>(MOCK_THREAD)
+  const [threadData, setThreadData] = useState<ThreadData | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [cooldown, setCooldown] = useState(false)
+  const cooldownRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [formData, setFormData] = useState<FormData>({
     topic: EXAMPLE_DATA.lessonLearned.topic,
     keyPoints: EXAMPLE_DATA.lessonLearned.keyPoints,
@@ -113,18 +60,45 @@ export default function DrafthreadPage() {
     numberTweets: true,
   })
 
-  const handleGenerate = () => {
+  const handleGenerate = useCallback(async () => {
+    if (!formData.topic.trim() || !formData.keyPoints.trim()) return
+    if (isGenerating || cooldown) return
+
     setIsGenerating(true)
-    // Simulate AI generation
-    setTimeout(() => {
-      setIsGenerating(false)
-      setThreadData({
-        ...MOCK_THREAD,
-        platform,
+    setError(null)
+
+    try {
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          platform,
+          threadType: formData.threadType,
+          tone: formData.tone,
+          topic: formData.topic,
+          keyPoints: formData.keyPoints,
+          cta: formData.cta,
+        }),
       })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || `Request failed (${res.status})`)
+      }
+
+      setThreadData(data as ThreadData)
       setActivePanel("preview")
-    }, 2000)
-  }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong")
+    } finally {
+      setIsGenerating(false)
+      // 3-second cooldown to prevent double-clicks
+      setCooldown(true)
+      if (cooldownRef.current) clearTimeout(cooldownRef.current)
+      cooldownRef.current = setTimeout(() => setCooldown(false), 3000)
+    }
+  }, [formData, platform, isGenerating, cooldown])
 
   const handleRegenerate = () => {
     handleGenerate()
@@ -196,6 +170,9 @@ export default function DrafthreadPage() {
             onGenerate={handleGenerate}
             onLoadExample={handleLoadExample}
             isGenerating={isGenerating}
+            isDisabled={cooldown}
+            error={error}
+            onDismissError={() => setError(null)}
           />
         </div>
 
@@ -223,7 +200,7 @@ export default function DrafthreadPage() {
       <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-zinc-950 border-t border-zinc-800">
         <button
           onClick={handleGenerate}
-          disabled={isGenerating || !formData.topic || !formData.keyPoints}
+          disabled={isGenerating || cooldown || !formData.topic || !formData.keyPoints}
           className="w-full h-12 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2"
         >
           {isGenerating ? (

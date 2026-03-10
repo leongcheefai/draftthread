@@ -8,6 +8,8 @@ import {
   List,
   Zap,
   Loader2,
+  AlertCircle,
+  X,
 } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import type { FormData, ThreadType, Tone } from "@/lib/drafthread-types"
@@ -20,6 +22,9 @@ interface InputFormProps {
   onGenerate: () => void
   onLoadExample: (example: "featureLaunch" | "lessonLearned" | "milestone") => void
   isGenerating: boolean
+  isDisabled?: boolean
+  error?: string | null
+  onDismissError?: () => void
 }
 
 const THREAD_TYPES: { type: ThreadType; label: string; icon: React.ReactNode }[] = [
@@ -40,6 +45,9 @@ export function InputForm({
   onGenerate,
   onLoadExample,
   isGenerating,
+  isDisabled,
+  error,
+  onDismissError,
 }: InputFormProps) {
   const updateField = <K extends keyof FormData>(field: K, value: FormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -192,11 +200,22 @@ export function InputForm({
         </div>
       </section>
 
+      {/* Error Banner */}
+      {error && (
+        <div className="flex items-start gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+          <p className="flex-1">{error}</p>
+          <button onClick={onDismissError} className="cursor-pointer shrink-0">
+            <X className="w-4 h-4 hover:text-red-300 transition-colors" />
+          </button>
+        </div>
+      )}
+
       {/* Generate Button - Hidden on mobile (using sticky button instead) */}
       <div className="hidden lg:block">
         <button
           onClick={onGenerate}
-          disabled={isGenerating || !formData.topic || !formData.keyPoints}
+          disabled={isGenerating || isDisabled || !formData.topic || !formData.keyPoints}
           className="w-full h-12 bg-orange-500 hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2 cursor-pointer"
         >
           {isGenerating ? (
