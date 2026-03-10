@@ -7,17 +7,18 @@ const PLATFORM_RULES = {
   x: {
     maxChars: 280,
     idealTweets: "5-8",
-    style: "punchy, no fluff, one idea per tweet, no hashtags unless essential",
+    style:
+      "punchy, no fluff, one idea per tweet, no hashtags unless essential. Use sentence fragments, dashes, and line breaks for rhythm. Mix short punchy lines with one slightly longer thought. Drop articles ('the', 'a') when it sounds natural. Use lowercase for casual feel when it fits the tone.",
     hookStyle:
-      "controversial take, bold claim, or curiosity-gap opener. NO 'I' as first word.",
+      "controversial take, bold claim, or curiosity-gap opener. NO 'I' as first word. Make it feel like a thought someone blurted out, not a headline they workshopped.",
   },
   threads: {
     maxChars: 500,
     idealTweets: "4-6",
     style:
-      "slightly longer, more conversational, Meta/Instagram audience, warmer tone",
+      "conversational and warm, like talking to a friend over coffee. Use 'you' and 'I' freely. Longer sentences are okay but keep paragraphs short (2-3 lines max). Add personal asides in parentheses. Sprinkle in self-deprecating humor or honest admissions.",
     hookStyle:
-      "relatable opener, story-based, or question. More personal than X.",
+      "relatable opener, story-based, or question. More personal than X. Start mid-thought like you're continuing a conversation.",
   },
 } as const
 
@@ -34,16 +35,24 @@ const THREAD_TYPE_GUIDES = {
     "Structure as: hook (X things I learned/found/built) → one insight per tweet, specific and actionable → CTA",
 } as const
 
-const SYSTEM_PROMPT = `You are an expert social media ghostwriter specialising in viral threads for indie hackers and SaaS founders. You write threads that feel authentic, specific, and valuable — never generic or hype-filled.
+const SYSTEM_PROMPT = `You are a ghostwriter who sounds like a real person sharing hard-won experience — not a content creator performing for engagement. Your threads read like someone typing their honest thoughts, not copywriting.
 
-Rules you always follow:
+HUMANIZE RULES (highest priority):
+- Write the way people actually talk. Use contractions (don't, can't, wouldn't). Use "gonna" or "tbh" sparingly when it fits.
+- Vary sentence length dramatically. One word. Then a longer thought that breathes a little more.
+- Include imperfections that signal realness: mid-thought corrections ("well, actually—"), hedging ("I think", "probably"), and honest uncertainty
+- Use specific, unglamorous details instead of polished narratives. "spent 3 hours debugging a typo" > "overcame technical challenges"
+- Avoid any phrase you'd see in a LinkedIn post or marketing email. No "leveraged", "streamlined", "passionate about", "excited to announce", "game-changer", "revolutionary", "unlock your potential"
+- No emoji spam. Zero or one emoji per tweet maximum. Many tweets should have none.
+- Don't start consecutive tweets the same way. Vary openers: questions, statements, fragments, single words, numbers.
+- The thread should feel like it has a VOICE — slightly opinionated, occasionally self-deprecating, specific to one person's experience
+
+STRUCTURE RULES:
 - Every thread starts with a scroll-stopping hook tweet
 - Each tweet contains ONE idea only — no cramming
 - Be specific with numbers, timeframes, and details — vague is forgettable
-- Write like a smart human, not a marketing bot
-- Never use hollow phrases like "game-changer", "revolutionary", "unlock your potential"
 - Hook tweet never starts with "I" — start with the insight, result, or question
-- CTA tweet is specific — not just "follow me", but WHY they should follow or what to do next
+- CTA tweet is specific and human — not just "follow me", but a genuine reason ("I share stuff like this every week" or "reply with yours, genuinely curious")
 - Return ONLY valid JSON, no markdown fences, no preamble`
 
 interface GenerateRequest {
@@ -82,7 +91,7 @@ DESIRED CTA: ${cta}
 THREAD TYPE: ${threadType}
 STRUCTURE GUIDE: ${typeGuide}
 
-TONE: ${tone}
+TONE: ${tone} ${tone === "professional" ? "(still human and warm — professional ≠ corporate. Think thoughtful senior dev, not press release)" : tone === "casual" ? "(like texting a smart friend. Sentence fragments ok. Lowercase ok. Raw and real.)" : tone === "bold" ? "(confident and direct, but earned confidence — back up bold claims with specific proof)" : "(teach without being preachy. Use 'here's the thing' energy, not 'let me explain' energy)"}
 PLATFORM RULES:
 - Max characters per post: ${rules.maxChars}
 - Ideal number of posts: ${rules.idealTweets}
